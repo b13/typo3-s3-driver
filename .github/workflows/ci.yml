@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron:  '23 5 * * *'
+
+jobs:
+
+  # runTests.sh prefers podman, which runs rootless on GitHub runners and can not resolve
+  # the S3 API container by name. Docker is used instead.
+  testsuite:
+    name: all tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.5' ]
+        TYPO3: [ '15' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install testing system
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -t ${{ matrix.TYPO3 }} -s composerInstall
+
+      - name: Composer validate
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -t ${{ matrix.TYPO3 }} -s composerValidate
+
+      - name: Lint PHP
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -s lint
+
+      - name: CGL
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -s cgl -n
+
+      - name: phpstan
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -t ${{ matrix.TYPO3 }} -s phpstan
+
+      - name: Unit Tests
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -s unit
+
+      - name: Functional Tests against an S3 API server
+        run: Build/Scripts/runTests.sh -b docker -p ${{ matrix.php }} -s functional

@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  B13\S3Driver\:
+    resource: '../Classes/*'
+    exclude:
+      # Created per storage by the S3DriverFactory, with the storage configuration
+      - '../Classes/Resource/S3Driver.php'

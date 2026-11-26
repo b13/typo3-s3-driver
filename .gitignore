@@ -1,0 +1,10 @@
+.Build/
+.cache/
+var/
+composer.lock
+composer.json.orig
+.php-cs-fixer.cache
+Build/phpunit/.phpunit.cache
+Build/phpunit/.phpunit.result.cache
+.phpunit.cache
+.idea
