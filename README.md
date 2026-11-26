@@ -26,7 +26,9 @@ streaming downloads and the file index are all handled by TYPO3 itself.
 composer require b13/typo3-s3-driver
 ```
 
-Requires TYPO3 v15 and PHP 8.5.
+Requires TYPO3 v15 and PHP 8.5, in Composer mode: the extension depends on
+the AWS SDK for PHP and the Flysystem S3 adapter, which Composer installs.
+It is not available in the TYPO3 Extension Repository (TER).
 
 ## Configuration
 
